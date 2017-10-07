@@ -4,6 +4,7 @@ import './App.css';
 import axios from 'axios';
 import {base64ToBlob} from './utils'
 import Webcam from 'react-webcam';
+import './styles.css';
 
 const style = {
   webcamWrapper: {
@@ -87,20 +88,23 @@ class App extends Component {
  
   render() {
     const { result, nutrients, food } = this.state
+    const width = window.innerWidth
+    const height = window.innerHeight
     return (
-      <div>
+      <section className="app-container">
         <Webcam
+          className="webcam"
           audio={false}
-          height={350}
           ref={this.setRef}
           screenshotFormat="image/png"
-          width={350}
+          height={height} 
+          width={width}
         />
+        {food.fetching || nutrients.fetching?  <img src={this.state.imageSrc} alt=""/> : null }
         <button onClick={this.capture}>Capture photo</button>
-        <img src="this.state.imageSrc" alt=""/>
-        {this.state.imageSrc? <img src={this.state.imageSrc} alt="camera shot"/> : ""}
+
         {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}
-      </div>
+      </section>
     );
   }
 }
