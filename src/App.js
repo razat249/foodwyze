@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-
-import Webcam from 'react-webcam';
+import Webcam from './react-webcam';
 
 const style = {
   webcamWrapper: {
@@ -42,7 +41,7 @@ class App extends Component {
       imageSrc: ""
     }
   }
-
+  
   setRef = (webcam) => {
     this.webcam = webcam;
   }
@@ -111,6 +110,7 @@ class App extends Component {
  
   render() {
     const { result } = this.state
+    console.log(this.state.default)
     return (
       <div>
         <Webcam
