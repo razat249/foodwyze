@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
-
+import {base64ToBlob} from './utils'
 import Webcam from 'react-webcam';
 
 const style = {
@@ -11,35 +11,21 @@ const style = {
   }
 }
 
-function base64ToBlob(base64, mime) 
-{
-    mime = mime || '';
-    var sliceSize = 1024;
-    var byteChars = window.atob(base64);
-    var byteArrays = [];
-
-    for (var offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
-        var slice = byteChars.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-    }
-
-    return new Blob(byteArrays, {type: mime});
-}
-
-
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      imageSrc: ""
+      imageSrc: "",
+      nutrients: {
+        data:{},
+        fetching: false,
+        error: "",
+      },
+      food: {
+        data:{},
+        fetching: false,
+        error: "",
+      }
     }
   }
 
@@ -47,26 +33,28 @@ class App extends Component {
     this.webcam = webcam;
   }
 
+  getNutritionData(food) {
+    console.log(food)
+    return axios.post('https://trackapi.nutritionix.com/v2/natural/nutrients', {
+      "query": `${food}`,
+      "timezone": "US/Eastern"
+      },
+      { 
+        headers:{
+        'Content-Type':'application/json',
+        'x-app-id':'003c8ea9',
+        'x-app-key':'4cf01cb7d2c5ac13741fd793a09d760c',
+    }})
+  }
+
   getImageRecognitionData(image) {
-
-    var base64ImageContent = image.replace(/^data:image\/(png|jpg);base64,/, "");
-    var blob = base64ToBlob(base64ImageContent, 'image/png');                
-    var data = new FormData();
-    var field = {
-      uri: image,
-      name:'he.png',
-      type: 'image/png'
-    }
-    data.append('images_file', image);
-
     var data = new FormData();
 
     fetch(image)
     .then(res => res.blob())
     .then(blob => {
       data.append('image', blob, 'filename.png')
-      
-
+  
       const config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -75,32 +63,20 @@ class App extends Component {
 
       const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c"
       const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`
+      this.setState({ food: {...this.state.food, fetching: true} })
       return axios.post(url, data, config)
     }).then(res => {
-        let result = res.data.images[0].classifiers[0]
-        this.setState({result})
-        console.log(result)
+        let result = res.data.images[0].classifiers[0].classes[0].class
+        this.setState({ food: {...this.state.food, data: result, fetching: false} })
+        this.setState({ nutrients: {...this.state.nutrients, fetching: false} })      
+        return this.getNutritionData(result)
+    }).then(data => {
+        this.setState({ nutrients: {...this.state.nutrients, data: data.data.foods[0], fetching: false} })
     }).catch(res => {
-        console.log("tutu")
+        this.setState({ food: {...this.state.food, error: res.response.message, fetching: false} })
+        this.setState({nutrients: {...this.state.nutrients, error: res.response.message, fetching: false}})
+        console.error(res)
     })
-
-
-
-
-
-      // data.append("images_file", {
-      //   // uri: "https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwjHu9ilgd_WAhXDQ48KHZErCIgQjRwIBw&url=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fjson_file_system&psig=AOvVaw0xqPgt5GawDhfJVhsvnq71&ust=1507482827747752",
-      //   uri: "http://placekitten.com.s3.amazonaws.com/homepage-samples/408/287.jpg",  
-      //   name: "o.jpg",
-      //   type: 'image/jpeg',
-      // });
-
-      // data.append("images_file", {
-      //   uri: image, name: 'hello.jpeg', type: 'image/jpeg'}, 'hello.jpeg');
-
-      // Create the config object for the POST
-      // You typically have an OAuth2 token that you use for authentication
-      
   }
  
   capture = () => {
@@ -110,7 +86,7 @@ class App extends Component {
   };
  
   render() {
-    const { result } = this.state
+    const { result, nutrients, food } = this.state
     return (
       <div>
         <Webcam
@@ -123,7 +99,7 @@ class App extends Component {
         <button onClick={this.capture}>Capture photo</button>
         <img src="this.state.imageSrc" alt=""/>
         {this.state.imageSrc? <img src={this.state.imageSrc} alt="camera shot"/> : ""}
-        { JSON.stringify(result || {}, 0, 4) }
+        {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}
       </div>
     );
   }
