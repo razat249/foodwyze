@@ -6,7 +6,8 @@
     "axios": "^0.16.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-webcam": "^0.2.0"
+    "react-webcam": "^0.2.0",
+    "webrtc-adapter": "^5.0.4"
   },
   "devDependencies": {
     "react-scripts": "1.0.14"
