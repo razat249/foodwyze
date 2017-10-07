@@ -4,9 +4,24 @@ section.app-container {
     right: 0;
     top: 0;
     bottom: 0;
+    text-align: center;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
-.webcam {
-    height: 100vh;
-    /* width: 100%; */
+.webcam, .captured-image {
+    position: fixed; right: 0; bottom: 0;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto; z-index: -100;
+}
+
+.btn-capture {
+    position: absolute;
+    bottom: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255, 0.7);
+    border: 2px solid white;
+    width: 70px;
+    height: 70px;
+    margin-left: -35px;
 }

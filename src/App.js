@@ -100,8 +100,8 @@ class App extends Component {
           height={height} 
           width={width}
         />
-        {food.fetching || nutrients.fetching?  <img src={this.state.imageSrc} alt=""/> : null }
-        <button onClick={this.capture}>Capture photo</button>
+        {food.fetching || nutrients.fetching?  <img className="captured-image" src={this.state.imageSrc} alt=""/> : null }
+        <button className="btn-capture" onClick={this.capture}> </button>
 
         {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}
       </section>
