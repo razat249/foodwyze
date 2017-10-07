@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import Webcam from './react-webcam';
 import {base64ToBlob} from './utils'
-import Webcam from 'react-webcam';
 import './styles.css';
 
 const style = {
@@ -29,7 +29,7 @@ class App extends Component {
       }
     }
   }
-
+  
   setRef = (webcam) => {
     this.webcam = webcam;
   }
