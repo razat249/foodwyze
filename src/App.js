@@ -7,6 +7,9 @@ import { base64ToBlob } from "./utils";
 import sound from "./song.mp3"
 import randomColor from "random-color"
 import "./styles.css";
+import NutritionInfo from './NutritionInfo';
+
+
 
 // 60*136/1000
 const pulse = 400
@@ -110,30 +113,41 @@ class App extends Component {
         this.setState({
           food: {
             ...this.state.food,
-            error: res.response.message,
+            error: res.response.data.message,
             fetching: false
           }
         });
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            error: res.response.message,
+            error: res.response.data.message,
             fetching: false
           }
         });
-        console.error(res);
+        setTimeout(() =>{ this.setState({
+          nutrients: {...this.state.nutrients, error: ""},
+          food: {...this.state.food, error: ""}
+        }) }, 2000);
+        console.log('lerr', res.response.data.message);
       });
   }
 
   capture = () => {
     this.camera.capture().then(blob => {
       let src = URL.createObjectURL(blob);
+<<<<<<< HEAD
       console.log(src)
+=======
+>>>>>>> 6411a1aa65aae671dd8863c556ca7525adb2b857
       this.setState({ imageSrc: src });
       this.getImageRecognitionData(blob);
     }
     )
   };
+
+  showError(error) {
+    return error ? <div className="error">{error}</div>: null
+  }
 
   render() {
     const { result, nutrients, food } = this.state;
@@ -142,17 +156,23 @@ class App extends Component {
     console.log(this.state.color)
     return (
       <section className="app-container">
+<<<<<<< HEAD
         <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
             console.warn(this.refs.audio)
             this.refs.audio.volume = 0.1
           }}>
+=======
+         <NutritionInfo></NutritionInfo> 
+        {/* <audio loop autoPlay>
+>>>>>>> 6411a1aa65aae671dd8863c556ca7525adb2b857
           <source src={sound} type="audio/mpeg" />
-        </audio>
+        </audio> */}
         <Webcam
           className="webcam"
           audio={false}
           ref={this.setRef}
           screenshotFormat="image/png"
+<<<<<<< HEAD
         />
         {food.fetching || nutrients.fetching ? (
           <div className="captured-image" style={{
@@ -166,12 +186,22 @@ class App extends Component {
         <button className="btn-capture" onClick={this.capture}>
           {" "}
         </button>
+=======
+          height={height}
+          width={width}
+        /> 
+        {food.fetching || nutrients.fetching?  <img className="captured-image" height={height}
+          width={width} src={this.state.imageSrc} alt=""/> : null }
+        <button className="btn-capture" onClick={this.capture}> </button>
+>>>>>>> 6411a1aa65aae671dd8863c556ca7525adb2b857
 
         {food.fetching || nutrients.fetching ? (
           "Loading..."
         ) : (
           <h1>{JSON.stringify(nutrients.data)}</h1>
         )}
+
+        {this.showError(this.nutrients)}
       </section>
     );
   }
