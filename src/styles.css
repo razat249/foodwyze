@@ -25,3 +25,17 @@ section.app-container {
     height: 70px;
     margin-left: -35px;
 }
+
+.error {
+    background: #EE3333;
+    color: white;
+    padding: 20px;
+    top: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+/* 
+back
+save
++ - */

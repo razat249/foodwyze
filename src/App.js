@@ -4,8 +4,9 @@ import "./App.css";
 import axios from "axios";
 import Webcam from "./react-webcam";
 import { base64ToBlob } from "./utils";
-import sound from "./song.mp3"
+//import sound from "./song.mp3"
 import "./styles.css";
+const sound= 'hey.mp3'
 
 const style = {
   webcamWrapper: {
@@ -97,18 +98,22 @@ class App extends Component {
         this.setState({
           food: {
             ...this.state.food,
-            error: res.response.message,
+            error: res.response.data.message,
             fetching: false
           }
         });
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            error: res.response.message,
+            error: res.response.data.message,
             fetching: false
           }
         });
-        console.error(res);
+        setTimeout(() =>{ this.setState({
+          nutrients: {...this.state.nutrients, error: ""},
+          food: {...this.state.food, error: ""}
+        }) }, 2000);
+        console.log('lerr', res.response.data.message);
       });
   }
 
@@ -120,6 +125,10 @@ class App extends Component {
     }
     )
   };
+
+  showError(error) {
+    return error ? <div className="error">{error}</div>: null
+  }
 
   render() {
     const { result, nutrients, food } = this.state;
@@ -148,6 +157,8 @@ class App extends Component {
         ) : (
           <h1>{JSON.stringify(nutrients.data)}</h1>
         )}
+
+        {this.showError(this.nutrients)}
       </section>
     );
   }
