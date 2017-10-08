@@ -6,13 +6,19 @@ section.app-container {
     bottom: 0;
     text-align: center;
     max-height: 100vh;
-    overflow: hidden;
+     overflow: hidden; 
 }
 
 .webcam, .captured-image {
-    position: fixed; right: 0; bottom: 0;
-    min-width: 100%; min-height: 100%;
-    width: auto; height: auto; z-index: -100;
+    position: fixed;
+    right: 0; 
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;  
+    width: auto; 
+    height: auto; 
+    background-size: cover;  
+    z-index: -100; 
 }
 
 .btn-capture {
@@ -24,6 +30,7 @@ section.app-container {
     width: 70px;
     height: 70px;
     margin-left: -35px;
+    z-index: 10;
 }
 
 .error {
@@ -39,3 +46,4 @@ section.app-container {
 back
 save
 + - */
+

@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import axios from "axios";
-import Webcam from "./react-webcam";
-import { base64ToBlob } from "./utils";
-//import sound from "./song.mp3"
-import "./styles.css";
-const sound= 'hey.mp3'
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import axios from 'axios';
+import Webcam from './react-webcam';
+import {base64ToBlob} from './utils'
+import './styles.css';
+import NutritionInfo from './NutritionInfo';
+// import sound from "./song.mp3"
 
 const style = {
   webcamWrapper: {
@@ -120,7 +121,7 @@ class App extends Component {
   capture = () => {
     this.camera.capture().then(blob => {
       let src = URL.createObjectURL(blob);
-      this.setState({ imageSrc: blob });
+      this.setState({ imageSrc: src });
       this.getImageRecognitionData(blob);
     }
     )
@@ -136,21 +137,21 @@ class App extends Component {
     const height = window.innerHeight;
     return (
       <section className="app-container">
-        <audio loop autoPlay>
+         <NutritionInfo></NutritionInfo> 
+        {/* <audio loop autoPlay>
           <source src={sound} type="audio/mpeg" />
-        </audio>
+        </audio> */}
         <Webcam
           className="webcam"
           audio={false}
           ref={this.setRef}
           screenshotFormat="image/png"
-        />
-        {food.fetching || nutrients.fetching ? (
-          <img className="captured-image" src={this.state.imageSrc} alt="" />
-        ) : null}
-        <button className="btn-capture" onClick={this.capture}>
-          {" "}
-        </button>
+          height={height}
+          width={width}
+        /> 
+        {food.fetching || nutrients.fetching?  <img className="captured-image" height={height}
+          width={width} src={this.state.imageSrc} alt=""/> : null }
+        <button className="btn-capture" onClick={this.capture}> </button>
 
         {food.fetching || nutrients.fetching ? (
           "Loading..."

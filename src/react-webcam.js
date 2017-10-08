@@ -28,7 +28,7 @@ class Camera extends Component {
     return (
       <div style={this.props.style}>
         { this.props.children }
-        <video style={styles.base} ref={(video) => { this.video = video; }} />
+        <video className="webcam" height={this.props.height} width={this.props.width} ref={(video) => { this.video = video; }} />
       </div>
     );
   }
@@ -52,10 +52,3 @@ Camera.defaultProps = {
 };
 
 export default Camera;
-
-const styles = {
-  base: {
-    width: '100%',
-    height: '100%'
-  }
-};
