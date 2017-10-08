@@ -5,6 +5,7 @@ import axios from 'axios';
 import Webcam from './react-webcam';
 import {base64ToBlob} from './utils'
 import './styles.css';
+import NutritionInfo from './NutritionInfo';
 
 const style = {
   webcamWrapper: {
@@ -73,6 +74,7 @@ class App extends Component {
         return this.getNutritionData(result)
     }).then(data => {
         this.setState({ nutrients: {...this.state.nutrients, data: data.data.foods[0], fetching: false} })
+        console.log(data.data)
     }).catch(res => {
         this.setState({ food: {...this.state.food, error: res.response.message, fetching: false} })
         this.setState({nutrients: {...this.state.nutrients, error: res.response.message, fetching: false}})
@@ -92,18 +94,19 @@ class App extends Component {
     const height = window.innerHeight
     return (
       <section className="app-container">
-        <Webcam
+        <NutritionInfo></NutritionInfo>
+        {/* <Webcam
           className="webcam"
           audio={false}
           ref={this.setRef}
           screenshotFormat="image/png"
           height={height} 
           width={width}
-        />
+        /> */}
         {food.fetching || nutrients.fetching?  <img className="captured-image" src={this.state.imageSrc} alt=""/> : null }
         <button className="btn-capture" onClick={this.capture}> </button>
 
-        {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}
+         {/* {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}  */}
       </section>
     );
   }
