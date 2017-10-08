@@ -21,6 +21,10 @@ section.app-container {
     z-index: -100; 
 }
 
+.captured-image {
+    z-index: 100;
+}
+
 .btn-capture {
     position: absolute;
     bottom: 30px;
@@ -39,3 +43,17 @@ section.app-container {
     color: rgba(255,255,255, 0.7);
     height: 100%
 }
+.error {
+    background: #EE3333;
+    color: white;
+    padding: 20px;
+    top: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+/* 
+back
+save
++ - */
+

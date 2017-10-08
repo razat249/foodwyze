@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.2",
+    "random-color": "^1.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-webcam": "^0.2.0",
+    "tone": "^0.11.11",
     "webrtc-adapter": "^5.0.4"
   },
   "devDependencies": {
