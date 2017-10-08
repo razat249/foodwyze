@@ -37,6 +37,12 @@ section.app-container {
     z-index: 10;
 }
 
+.nutrition-info {
+    background-color: rgba(0,0,0, 0.7);
+    padding: 20px;
+    color: rgba(255,255,255, 0.7);
+    height: 100%
+}
 .error {
     background: #EE3333;
     color: white;

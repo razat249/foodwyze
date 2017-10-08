@@ -27,7 +27,7 @@ const backgroundVolume = -20;
 class App extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialState = {
       imageSrc: "",
       nutrients: {
         data: {},
@@ -35,13 +35,28 @@ class App extends Component {
         error: ""
       },
       food: {
-        data: {},
+        data: {
+          food_name: "",
+          nf_calories:278.4,
+          nf_cholesterol:0,
+          nf_dietary_fiber:5.52,
+          nf_p:67.2,
+          nf_potassium:1116,
+          nf_protein:1.9,
+          nf_saturated_fat:0.17,
+          nf_sodium:12,
+          nf_sugars:33.6,
+          nf_total_carbohydrate:74.76,
+          nf_total_fat:0.43,
+        },
         fetching: false,
         error: ""
       },
       color: "transparent",
-      scale: 1
+      scale: 1,
+      fetched: false,
     };
+    this.state = this.initialState;
   }
 
   setRef = cam => {
@@ -83,7 +98,7 @@ class App extends Component {
 
         const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c";
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
-        this.setState({ food: { ...this.state.food, fetching: true } });
+        this.setState({ food: { ...this.state.food, fetching: true }, fetched: false });
         this.colorChanger = setInterval(() => {
           this.setState({color: randomColor().hexString(), scale: this.state.scale === 1.5 ? 1 : 1.5})
         }, pulse)
@@ -93,20 +108,32 @@ class App extends Component {
       .then(res => {
         result = res.data.images[0].classifiers[0].classes[0].class;
         this.setState({
-          food: { ...this.state.food, data: result, fetching: false }
-        });
-        this.setState({
-          nutrients: { ...this.state.nutrients, fetching: false }
+          food: { ...this.state.food, data: result, fetching: false },
         });
         return this.getNutritionData(result);
       })
       .then(data => {
+        let foodInfo = data.data.foods[0]
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            data: data.data.foods[0],
+            data: {
+                food_name: foodInfo.food_name,
+                nf_calories: foodInfo.nf_calories,
+                nf_cholesterol: foodInfo.nf_cholesterol,
+                nf_dietary_fiber: foodInfo.nf_dietary_fiber,
+                nf_p: foodInfo.nf_p,
+                nf_potassium: foodInfo.nf_potassium,
+                nf_protein: foodInfo.nf_protein,
+                nf_saturated_fat: foodInfo.nf_saturated_fat,
+                nf_sodium: foodInfo.nf_sodium,
+                nf_sugars: foodInfo.nf_sugars,
+                nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
+                nf_total_fat: foodInfo.nf_total_fat,
+              },
             fetching: false
-          }
+          },
+          fetched: true
         });
         clearInterval(this.colorChanger)
         responsiveVoice.speak(", , I have an app , I have a" + result + " that is " + data.data.foods[0].nf_calories + "calories", "Hindi Female", {rate: 0.8});
@@ -117,19 +144,18 @@ class App extends Component {
             ...this.state.food,
             error: res.response.data.message,
             fetching: false
-          }
-        });
-        this.setState({
+          },
           nutrients: {
             ...this.state.nutrients,
             error: res.response.data.message,
             fetching: false
-          }
+          },
+          fetched: true
         });
-        setTimeout(() =>{ this.setState({
-          nutrients: {...this.state.nutrients, error: ""},
-          food: {...this.state.food, error: ""}
-        }) }, 2000);
+        // setTimeout(() =>{ this.setState({
+        //   nutrients: {...this.state.nutrients, error: ""},
+        //   food: {...this.state.food, error: ""}
+        // }) }, 2000);
         console.log('lerr', res.response.data.message);
       });
   }
@@ -148,9 +174,10 @@ class App extends Component {
   }
 
   render() {
-    const { result, nutrients, food } = this.state;
+    const { result, nutrients, food, fetched } = this.state;
     const width = window.innerWidth;
     const height = window.innerHeight;
+
     return (
       <section className="app-container">
         <audio loop ref="audio" onLoadedData={(e,i) => {
@@ -178,15 +205,9 @@ class App extends Component {
             transform: "scale("+ this.state.scale + ")"
             }} alt="" />
         ) : null}
-        <button className="btn-capture" onClick={this.capture}>
-          {" "}
-        </button>
 
-        {food.fetching || nutrients.fetching ? (
-          "Loading..."
-        ) : (
-          <h1>{JSON.stringify(nutrients.data)}</h1>
-        )}
+        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : <button className="btn-capture" onClick={this.capture}>
+        </button>}
 
         {this.showError(this.nutrients)}
       </section>
