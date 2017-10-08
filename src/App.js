@@ -57,6 +57,7 @@ class App extends Component {
       fetched: false,
     };
     this.state = this.initialState;
+    this.setInitialState = this.setInitialState.bind(this)
   }
 
   setRef = cam => {
@@ -109,7 +110,7 @@ class App extends Component {
 
         const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c";
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
-        this.setState({ food: { ...this.state.food, fetching: true }, fetched: false });
+        this.setState({ food: { ...this.state.food, fetching: true }, nutrients: {...this.state.nutrients, fetching: true}, fetched: false });
         this.colorChanger = setInterval(() => {
           this.setState({color: randomColor().hexString(), scale: this.state.scale === 1.5 ? 1 : 1.5})
         }, pulse)
@@ -125,6 +126,7 @@ class App extends Component {
       })
       .then(data => {
         let foodInfo = data.data.foods[0];
+        console.log(foodInfo)
         const foodObject = {
             food_name: foodInfo.food_name,
             nf_calories: foodInfo.nf_calories,
@@ -152,6 +154,7 @@ class App extends Component {
         responsiveVoice.speak(", , I have an app , I have a" + result + " that is " + data.data.foods[0].nf_calories + "calories", "Hindi Female", {rate: 0.8});
       })
       .catch(res => {
+        console.log(res)
         this.setState({
           food: {
             ...this.state.food,
@@ -183,7 +186,7 @@ class App extends Component {
   };
 
   storeFoodObject(foodObject) {
-    const foodObjects = JSON.parse('items'|| '[]') || []
+    const foodObjects = JSON.parse(localStorage.items || '[]') || []
     const itemToSave = {
       food: foodObject,
       time: Date(),
@@ -194,6 +197,10 @@ class App extends Component {
 
   showError(error) {
     return error ? <div className="error">{error}</div>: null
+  }
+
+  setInitialState() {
+    this.setState(this.initialState)
   }
 
   render() {
@@ -209,7 +216,6 @@ class App extends Component {
           }}>
           <source src={sound} type="audio/mpeg" />
         </audio>
-         <NutritionInfo></NutritionInfo> 
         <Webcam
           className="webcam"
           audio={false}
@@ -229,8 +235,11 @@ class App extends Component {
             }} alt="" />
         ) : null}
 
-        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : <button className="btn-capture" onClick={this.capture}>
+        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : 
+        <button className="btn-capture" onClick={this.capture}>
         </button>}
+
+        {this.state.nutrients.error || fetched ? <button className="btn-capture close-btn" onClick={this.setInitialState}>X</button> : null}
 
         {this.showError(this.nutrients)}
       </section>
