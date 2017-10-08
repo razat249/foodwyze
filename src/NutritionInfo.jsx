@@ -6,6 +6,21 @@ export default class NutritionInfo extends Component {
   }
 
   render() {
+
+    const {
+        food_name,
+        nf_calories,
+        nf_cholesterol,
+        nf_dietary_fiber,
+        nf_p,
+        nf_potassium,
+        nf_protein,
+        nf_saturated_fat,
+        nf_sodium,
+        nf_sugars,
+        nf_total_carbohydrate,
+        nf_total_fat
+      } = this.props.nutrients
     
     let rendering;
     if (!this.props.error) {
@@ -36,21 +51,6 @@ export default class NutritionInfo extends Component {
     } else {
       rendering = <div style={{marginTop: "40vh"}}><h3>I can't see any food. Let's try again :)</h3></div>
     }
-
-      const {
-        food_name,
-        nf_calories,
-        nf_cholesterol,
-        nf_dietary_fiber,
-        nf_p,
-        nf_potassium,
-        nf_protein,
-        nf_saturated_fat,
-        nf_sodium,
-        nf_sugars,
-        nf_total_carbohydrate,
-        nf_total_fat
-      } = this.props.nutrients
       return ( 
         <div className="nutrition-info">
           {rendering}

@@ -37,6 +37,12 @@ section.app-container {
     z-index: 10;
 }
 
+.close-btn {
+    background: rgba(255,0,0, 0.2);
+    color: white;
+    font-size: 3em;
+}
+
 .nutrition-info {
     background-color: rgba(0,0,0, 0.7);
     padding: 20px;

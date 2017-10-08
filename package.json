@@ -1,9 +1,11 @@
 {
   "name": "foodwyze",
+  "homepage": "https://razat249.github.io/foodwyze",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "axios": "^0.16.2",
+    "gh-pages": "^1.0.0",
     "random-color": "^1.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -15,6 +17,8 @@
     "react-scripts": "1.0.14"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

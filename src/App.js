@@ -56,6 +56,7 @@ class App extends Component {
       color: "transparent"
     };
     this.state = this.initialState;
+    this.setInitialState = this.setInitialState.bind(this)
   }
 
   setRef = cam => {
@@ -97,7 +98,7 @@ class App extends Component {
 
         const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c";
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
-        this.setState({ food: { ...this.state.food, fetching: true }, fetched: false });
+        this.setState({ food: { ...this.state.food, fetching: true }, nutrients: {...this.state.nutrients, fetching: true}, fetched: false });
         this.colorChanger = setInterval(() => {
           this.setState({color: randomColor().hexString()})
         }, pulse)
@@ -171,6 +172,10 @@ class App extends Component {
     return error ? <div className="error">{error}</div>: null
   }
 
+  setInitialState() {
+    this.setState(this.initialState)
+  }
+
   render() {
     const { result, nutrients, food, fetched } = this.state;
     const width = window.innerWidth;
@@ -202,8 +207,11 @@ class App extends Component {
             }} alt="" />
         ) : null}
 
-        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : <button className="btn-capture" onClick={this.capture}>
+        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : 
+        <button className="btn-capture" onClick={this.capture}>
         </button>}
+
+        {this.state.nutrients.error || fetched ? <button className="btn-capture close-btn" onClick={this.setInitialState}>X</button> : null}
 
         {this.showError(this.nutrients)}
       </section>
