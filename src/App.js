@@ -13,7 +13,9 @@ const style = {
   }
 };
 
-const backgroundVolume = -8;
+const responsiveVoice = window.responsiveVoice
+
+const backgroundVolume = -20;
 
 class App extends Component {
   constructor() {
@@ -57,6 +59,7 @@ class App extends Component {
 
   getImageRecognitionData(image) {
     var data = new FormData();
+    let result
 
     fetch(image)
       .then(res => res.blob())
@@ -75,7 +78,7 @@ class App extends Component {
         return axios.post(url, data, config);
       })
       .then(res => {
-        let result = res.data.images[0].classifiers[0].classes[0].class;
+        result = res.data.images[0].classifiers[0].classes[0].class;
         this.setState({
           food: { ...this.state.food, data: result, fetching: false }
         });
@@ -92,6 +95,7 @@ class App extends Component {
             fetching: false
           }
         });
+        responsiveVoice.speak(", , I have an app , I have a" + result + " that is " + data.data.foods[0].nf_calories + "calories", "Hindi Female", {rate: 0.8});
       })
       .catch(res => {
         this.setState({
@@ -115,7 +119,8 @@ class App extends Component {
   capture = () => {
     this.camera.capture().then(blob => {
       let src = URL.createObjectURL(blob);
-      this.setState({ imageSrc: blob });
+      console.log(src)
+      this.setState({ imageSrc: src });
       this.getImageRecognitionData(blob);
     }
     )
@@ -127,7 +132,10 @@ class App extends Component {
     const height = window.innerHeight;
     return (
       <section className="app-container">
-        <audio loop autoPlay>
+        <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
+            console.warn(this.refs.audio)
+            this.refs.audio.volume = 0.1
+          }}>
           <source src={sound} type="audio/mpeg" />
         </audio>
         <Webcam
