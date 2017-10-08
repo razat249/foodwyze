@@ -12,7 +12,7 @@ import NutritionInfo from './NutritionInfo';
 
 
 // 60*136/1000
-const pulse = 400
+const pulse = 200
 
 const style = {
   webcamWrapper: {
@@ -52,8 +52,9 @@ class App extends Component {
         fetching: false,
         error: ""
       },
+      color: "transparent",
+      scale: 1,
       fetched: false,
-      color: "transparent"
     };
     this.state = this.initialState;
     this.setInitialState = this.setInitialState.bind(this)
@@ -100,8 +101,9 @@ class App extends Component {
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
         this.setState({ food: { ...this.state.food, fetching: true }, nutrients: {...this.state.nutrients, fetching: true}, fetched: false });
         this.colorChanger = setInterval(() => {
-          this.setState({color: randomColor().hexString()})
+          this.setState({color: randomColor().hexString(), scale: this.state.scale === 1.5 ? 1 : 1.5})
         }, pulse)
+        this.refs.audio.play();
         return axios.post(url, data, config);
       })
       .then(res => {
@@ -112,24 +114,26 @@ class App extends Component {
         return this.getNutritionData(result);
       })
       .then(data => {
-        let foodInfo = data.data.foods[0]
+        let foodInfo = data.data.foods[0];
+        const foodObject = {
+            food_name: foodInfo.food_name,
+            nf_calories: foodInfo.nf_calories,
+            nf_cholesterol: foodInfo.nf_cholesterol,
+            nf_dietary_fiber: foodInfo.nf_dietary_fiber,
+            nf_p: foodInfo.nf_p,
+            nf_potassium: foodInfo.nf_potassium,
+            nf_protein: foodInfo.nf_protein,
+            nf_saturated_fat: foodInfo.nf_saturated_fat,
+            nf_sodium: foodInfo.nf_sodium,
+            nf_sugars: foodInfo.nf_sugars,
+            nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
+            nf_total_fat: foodInfo.nf_total_fat,
+        }
+        this.storeFoodObject(foodObject);
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            data: {
-                food_name: foodInfo.food_name,
-                nf_calories: foodInfo.nf_calories,
-                nf_cholesterol: foodInfo.nf_cholesterol,
-                nf_dietary_fiber: foodInfo.nf_dietary_fiber,
-                nf_p: foodInfo.nf_p,
-                nf_potassium: foodInfo.nf_potassium,
-                nf_protein: foodInfo.nf_protein,
-                nf_saturated_fat: foodInfo.nf_saturated_fat,
-                nf_sodium: foodInfo.nf_sodium,
-                nf_sugars: foodInfo.nf_sugars,
-                nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
-                nf_total_fat: foodInfo.nf_total_fat,
-              },
+            data: foodObject,
             fetching: false
           },
           fetched: true
@@ -168,6 +172,16 @@ class App extends Component {
     )
   };
 
+  storeFoodObject(foodObject) {
+    const foodObjects = JSON.parse('items'|| '[]') || []
+    const itemToSave = {
+      food: foodObject,
+      time: Date(),
+    }
+    foodObjects.push(itemToSave)
+    foodObjects.setItem('items', JSON.stringify(foodObjects) )
+  }
+
   showError(error) {
     return error ? <div className="error">{error}</div>: null
   }
@@ -183,12 +197,13 @@ class App extends Component {
 
     return (
       <section className="app-container">
-        {/* <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
+        <audio loop ref="audio" onLoadedData={(e,i) => {
             console.warn(this.refs.audio)
             this.refs.audio.volume = 0.1
-        }}>
+          }}>
           <source src={sound} type="audio/mpeg" />
-        </audio> */}
+        </audio>
+         <NutritionInfo></NutritionInfo> 
         <Webcam
           className="webcam"
           audio={false}
@@ -203,7 +218,8 @@ class App extends Component {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundBlendMode: "screen",
-            backgroundColor: this.state.color
+            backgroundColor: this.state.color,
+            transform: "scale("+ this.state.scale + ")"
             }} alt="" />
         ) : null}
 
