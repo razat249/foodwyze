@@ -12,7 +12,7 @@ import NutritionInfo from './NutritionInfo';
 
 
 // 60*136/1000
-const pulse = 400
+const pulse = 200
 
 const style = {
   webcamWrapper: {
@@ -39,7 +39,8 @@ class App extends Component {
         fetching: false,
         error: ""
       },
-      color: "transparent"
+      color: "transparent",
+      scale: 1
     };
   }
 
@@ -84,8 +85,9 @@ class App extends Component {
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
         this.setState({ food: { ...this.state.food, fetching: true } });
         this.colorChanger = setInterval(() => {
-          this.setState({color: randomColor().hexString()})
+          this.setState({color: randomColor().hexString(), scale: this.state.scale === 1.5 ? 1 : 1.5})
         }, pulse)
+        this.refs.audio.play()
         return axios.post(url, data, config);
       })
       .then(res => {
@@ -151,10 +153,12 @@ class App extends Component {
     const height = window.innerHeight;
     return (
       <section className="app-container">
-        <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
+        <audio loop ref="audio" onLoadedData={(e,i) => {
             console.warn(this.refs.audio)
             this.refs.audio.volume = 0.1
-          }} />
+          }}>
+          <source src={sound} type="audio/mpeg" />
+        </audio>
          <NutritionInfo></NutritionInfo> 
         <Webcam
           className="webcam"
@@ -170,7 +174,8 @@ class App extends Component {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundBlendMode: "screen",
-            backgroundColor: this.state.color
+            backgroundColor: this.state.color,
+            transform: "scale("+ this.state.scale + ")"
             }} alt="" />
         ) : null}
         <button className="btn-capture" onClick={this.capture}>
