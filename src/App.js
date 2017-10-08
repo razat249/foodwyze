@@ -14,6 +14,16 @@ import NutritionInfo from './NutritionInfo';
 // 60*136/1000
 const pulse = 200
 
+const loadingQuote = {
+  padding: "30px",
+  backgroundColor: "black",
+  color: "white",
+  position: "absolute",
+  top: "35vh",
+  left: "12vh",
+  zIndex: 1000
+}
+
 const style = {
   webcamWrapper: {
     width: "100%"
@@ -242,6 +252,9 @@ class App extends Component {
         </button>}
 
         {this.state.nutrients.error || fetched ? <button className="btn-capture close-btn" onClick={this.setInitialState}>X</button> : null}
+
+        {food.fetching || nutrients.fetching ? <div style={loadingQuote}><h1>Alright!!!!</h1></div>: null}
+
 
         {this.showError(this.nutrients)}
       </section>
