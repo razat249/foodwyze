@@ -100,6 +100,7 @@ class App extends Component {
         this.colorChanger = setInterval(() => {
           this.setState({color: randomColor().hexString()})
         }, pulse)
+        this.refs.audio.play();
         return axios.post(url, data, config);
       })
       .then(res => {
@@ -110,24 +111,26 @@ class App extends Component {
         return this.getNutritionData(result);
       })
       .then(data => {
-        let foodInfo = data.data.foods[0]
+        let foodInfo = data.data.foods[0];
+        const foodObject = {
+            food_name: foodInfo.food_name,
+            nf_calories: foodInfo.nf_calories,
+            nf_cholesterol: foodInfo.nf_cholesterol,
+            nf_dietary_fiber: foodInfo.nf_dietary_fiber,
+            nf_p: foodInfo.nf_p,
+            nf_potassium: foodInfo.nf_potassium,
+            nf_protein: foodInfo.nf_protein,
+            nf_saturated_fat: foodInfo.nf_saturated_fat,
+            nf_sodium: foodInfo.nf_sodium,
+            nf_sugars: foodInfo.nf_sugars,
+            nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
+            nf_total_fat: foodInfo.nf_total_fat,
+        }
+        this.storeFoodObject(foodObject);
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            data: {
-                food_name: foodInfo.food_name,
-                nf_calories: foodInfo.nf_calories,
-                nf_cholesterol: foodInfo.nf_cholesterol,
-                nf_dietary_fiber: foodInfo.nf_dietary_fiber,
-                nf_p: foodInfo.nf_p,
-                nf_potassium: foodInfo.nf_potassium,
-                nf_protein: foodInfo.nf_protein,
-                nf_saturated_fat: foodInfo.nf_saturated_fat,
-                nf_sodium: foodInfo.nf_sodium,
-                nf_sugars: foodInfo.nf_sugars,
-                nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
-                nf_total_fat: foodInfo.nf_total_fat,
-              },
+            data: foodObject,
             fetching: false
           },
           fetched: true
@@ -167,6 +170,16 @@ class App extends Component {
     )
   };
 
+  storeFoodObject(foodObject) {
+    const foodObjects = JSON.parse('items'|| '[]') || []
+    const itemToSave = {
+      food: foodObject,
+      time: Date(),
+    }
+    foodObjects.push(itemToSave)
+    foodObjects.setItem('items', JSON.stringify(foodObjects) )
+  }
+
   showError(error) {
     return error ? <div className="error">{error}</div>: null
   }
@@ -181,7 +194,8 @@ class App extends Component {
         <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
             console.warn(this.refs.audio)
             this.refs.audio.volume = 0.1
-          }} />
+          }} ><source src={sound} type="audio/mpeg" />
+          </audio>
         <Webcam
           className="webcam"
           audio={false}
