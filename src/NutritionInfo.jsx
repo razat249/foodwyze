@@ -46,7 +46,7 @@ export default class NutritionInfo extends Component {
         </div>
       </div>
     } else {
-      rendering = <div style={{marginTop: "40vh"}}><h3>I can't see any food. Let's try again :)</h3></div>
+      rendering = <div style={{marginTop: "40vh", color: "white !important"}}><h3 style={{ color: "white"}}>I can't see any food. Let's try again :)</h3></div>
     }
       return ( 
         <div className="nutrition-info">

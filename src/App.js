@@ -122,7 +122,7 @@ class App extends Component {
           }
         };
 
-        const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c";
+        const apiKey = "a5508ae32e72726480a957a08d5953d0fccdf628";
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
         this.setState({ food: { ...this.state.food, fetching: true }, nutrients: {...this.state.nutrients, fetching: true}, fetched: false });
         this.colorChanger = setInterval(() => {
@@ -286,7 +286,7 @@ class App extends Component {
 
         {this.state.nutrients.error || fetched ? <button className="btn-capture close-btn" onClick={this.setInitialState}>X</button> : null}
 
-        {/* {food.fetching || nutrients.fetching ? <div style={loadingQuote}><h1>Alright!!!!</h1></div>: null} */}
+         {food.fetching || nutrients.fetching ? <div style={loadingQuote}><h1>Alright!!!!</h1></div>: null} 
 
 
         {this.showError(this.nutrients)}
