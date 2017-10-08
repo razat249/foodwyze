@@ -27,7 +27,7 @@ const backgroundVolume = -20;
 class App extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialState = {
       imageSrc: "",
       nutrients: {
         data: {},
@@ -55,6 +55,7 @@ class App extends Component {
       fetched: false,
       color: "transparent"
     };
+    this.state = this.initialState;
   }
 
   setRef = cam => {
@@ -141,19 +142,18 @@ class App extends Component {
             ...this.state.food,
             error: res.response.data.message,
             fetching: false
-          }
-        });
-        this.setState({
+          },
           nutrients: {
             ...this.state.nutrients,
             error: res.response.data.message,
             fetching: false
-          }
+          },
+          fetched: true
         });
-        setTimeout(() =>{ this.setState({
-          nutrients: {...this.state.nutrients, error: ""},
-          food: {...this.state.food, error: ""}
-        }) }, 2000);
+        // setTimeout(() =>{ this.setState({
+        //   nutrients: {...this.state.nutrients, error: ""},
+        //   food: {...this.state.food, error: ""}
+        // }) }, 2000);
         console.log('lerr', res.response.data.message);
       });
   }
@@ -178,10 +178,12 @@ class App extends Component {
 
     return (
       <section className="app-container">
-        <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
+        {/* <audio loop autoPlay ref="audio" onLoadedData={(e,i) => {
             console.warn(this.refs.audio)
             this.refs.audio.volume = 0.1
-          }} />
+        }}>
+          <source src={sound} type="audio/mpeg" />
+        </audio> */}
         <Webcam
           className="webcam"
           audio={false}
@@ -199,17 +201,9 @@ class App extends Component {
             backgroundColor: this.state.color
             }} alt="" />
         ) : null}
-        <button className="btn-capture" onClick={this.capture}>
-          {" "}
-        </button>
 
-        {food.fetching || nutrients.fetching ? (
-          "Loading..."
-        ) : (
-          null
-        )}
-
-        {fetched ? <NutritionInfo nutrients={this.state.nutrients.data}></NutritionInfo> : ""}
+        {fetched ? <NutritionInfo error={this.state.nutrients.error} nutrients={this.state.nutrients.data}></NutritionInfo> : <button className="btn-capture" onClick={this.capture}>
+        </button>}
 
         {this.showError(this.nutrients)}
       </section>
