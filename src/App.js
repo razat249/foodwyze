@@ -286,7 +286,7 @@ class App extends Component {
 
         {this.state.nutrients.error || fetched ? <button className="btn-capture close-btn" onClick={this.setInitialState}>X</button> : null}
 
-        {food.fetching || nutrients.fetching ? <div style={loadingQuote}><h1>Alright!!!!</h1></div>: null}
+        {/* {food.fetching || nutrients.fetching ? <div style={loadingQuote}><h1>Alright!!!!</h1></div>: null} */}
 
 
         {this.showError(this.nutrients)}

@@ -33,7 +33,6 @@ section.app-container {
     border: 2px solid white;
     width: 70px;
     height: 70px;
-    margin-left: -35px;
     z-index: 10;
 }
 
