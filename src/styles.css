@@ -63,3 +63,10 @@ back
 save
 + - */
 
+
+
+.nutritions-content > div{
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+}

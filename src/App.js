@@ -39,6 +39,7 @@ class App extends Component {
       food: {
         data: {
           food_name: "",
+          serving_weight_grams: 0,
           nf_calories:278.4,
           nf_cholesterol:0,
           nf_dietary_fiber:5.52,
@@ -78,8 +79,8 @@ class App extends Component {
       {
         headers: {
           "Content-Type": "application/json",
-          "x-app-id": "003c8ea9",
-          "x-app-key": "4cf01cb7d2c5ac13741fd793a09d760c"
+          "x-app-id": "f275bd75",
+          "x-app-key": "8658967c4d3cdbe4bf77e08a48b61393"
         }
       }
     );
@@ -132,6 +133,7 @@ class App extends Component {
         console.log(foodInfo)
         const foodObject = {
             food_name: foodInfo.food_name,
+            serving_weight_grams: foodInfo.serving_weight_grams,
             nf_calories: foodInfo.nf_calories,
             nf_cholesterol: foodInfo.nf_cholesterol,
             nf_dietary_fiber: foodInfo.nf_dietary_fiber,
