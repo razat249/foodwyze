@@ -7,7 +7,9 @@ import { base64ToBlob } from "./utils";
 import sound from "./song.mp3"
 import randomColor from "random-color"
 import "./styles.css";
+import 'antd/dist/antd.css';
 import NutritionInfo from './NutritionInfo';
+import { Icon, Progress } from "antd"
 
 
 
@@ -66,6 +68,7 @@ class App extends Component {
       color: "transparent",
       scale: 1,
       fetched: false,
+      info: false,
     };
     this.state = this.initialState;
     this.setInitialState = this.setInitialState.bind(this)
@@ -94,8 +97,8 @@ class App extends Component {
   }
 
   aggregateFoodData()  {
-    const foodObjects = JSON.parse('items'|| '[]') || []
-    const aggregateFood = foodObjects.reduce((acc, obj) => {
+    const foodObjects = JSON.parse(localStorage.items || '[]') || []
+    return foodObjects.reduce((acc, obj) => {
       Object.keys(obj).map(key => {
         if( !acc[key] ) acc[key] = 0;
         acc[key] += (obj[key] || 0)
@@ -219,7 +222,27 @@ class App extends Component {
     const { result, nutrients, food, fetched } = this.state;
     const width = window.innerWidth;
     const height = window.innerHeight;
-
+    if(this.state.info) {
+      return <section className="app-container" style={{ background: "#000"}}>
+          
+          <Icon type="bars" style={{
+            fontSize: 40,
+            float: "right",
+            margin: 10,
+            color: "#FFF",
+          }} onClick={() => {
+            this.setState({
+              info: false
+            })
+          }} />
+          <div style={{
+            margin: 20
+          }}>
+          <h1 style={{ color: "#FFF"}}>Your today's total consumption</h1>
+        <NutritionInfo error={this.state.nutrients.error} nutrients={this.aggregateFoodData()}></NutritionInfo>
+        </div>
+      </section>
+    }
     return (
       <section className="app-container">
         <audio loop ref="audio" onLoadedData={(e,i) => {
@@ -228,6 +251,16 @@ class App extends Component {
           }}>
           <source src={sound} type="audio/mpeg" />
         </audio>
+          <Icon type="bars" style={{
+            fontSize: 40,
+            float: "right",
+            margin: 10,
+            color: "#FFF"
+          }} onClick={() => {
+            this.setState({
+              info: true
+            })
+          }} />
         <Webcam
           className="webcam"
           audio={false}
