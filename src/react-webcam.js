@@ -28,7 +28,7 @@ class Camera extends Component {
     return (
       <div style={this.props.style}>
         { this.props.children }
-        <video style={styles.base} ref={(video) => { this.video = video; }} />
+        <video className="webcam" style={styles.base} ref={(video) => { this.video = video; }} />
       </div>
     );
   }
