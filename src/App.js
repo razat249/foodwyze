@@ -192,7 +192,7 @@ class App extends Component {
       time: Date(),
     }
     foodObjects.push(itemToSave)
-    foodObjects.setItem('items', JSON.stringify(foodObjects) )
+    localStorage.setItem('items', JSON.stringify(foodObjects) )
   }
 
   showError(error) {
