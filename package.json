@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^2.13.4",
     "axios": "^0.16.2",
     "random-color": "^1.0.1",
     "react": "^16.0.0",

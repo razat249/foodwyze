@@ -81,6 +81,17 @@ class App extends Component {
     );
   }
 
+  aggregateFoodData()  {
+    const foodObjects = JSON.parse('items'|| '[]') || []
+    const aggregateFood = foodObjects.reduce((acc, obj) => {
+      Object.keys(obj).map(key => {
+        if( !acc[key] ) acc[key] = 0;
+        acc[key] += (obj[key] || 0)
+      })
+      return acc;
+    }, {})
+  }
+
   getImageRecognitionData(image) {
     var data = new FormData();
     let result
