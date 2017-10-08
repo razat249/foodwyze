@@ -21,6 +21,10 @@ section.app-container {
     z-index: -100; 
 }
 
+.captured-image {
+    z-index: 100;
+}
+
 .btn-capture {
     position: absolute;
     bottom: 30px;
