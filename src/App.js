@@ -117,7 +117,7 @@ class App extends Component {
   capture = () => {
     this.camera.capture().then(blob => {
       let src = URL.createObjectURL(blob);
-      this.setState({ imageSrc: blob });
+      this.setState({ imageSrc: src });
       this.getImageRecognitionData(blob);
     }
     )
@@ -129,17 +129,20 @@ class App extends Component {
     const height = window.innerHeight;
     return (
       <section className="app-container">
-        {/* <NutritionInfo></NutritionInfo> */}
+         <NutritionInfo></NutritionInfo> 
         {/* <audio loop autoPlay>
           <source src={sound} type="audio/mpeg" />
         </audio> */}
         <Webcam
+          className="webcam"
           audio={false}
           ref={this.setRef}
           screenshotFormat="image/png"
-          style={{height: height, width: width}}
+          height={height}
+          width={width}
         /> 
-        {food.fetching || nutrients.fetching?  <img className="captured-image" src={this.state.imageSrc} alt=""/> : null }
+        {food.fetching || nutrients.fetching?  <img className="captured-image" height={height}
+          width={width} src={this.state.imageSrc} alt=""/> : null }
         <button className="btn-capture" onClick={this.capture}> </button>
 
          {/* {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}  */}

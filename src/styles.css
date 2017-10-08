@@ -17,7 +17,7 @@ section.app-container {
     min-height: 100%;  
     width: auto; 
     height: auto; 
-    background-size: cover; 
+    background-size: cover;  
     z-index: -100; 
 }
 
