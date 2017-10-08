@@ -115,6 +115,7 @@ class App extends Component {
       })
       .then(data => {
         let foodInfo = data.data.foods[0];
+        console.log(foodInfo)
         const foodObject = {
             food_name: foodInfo.food_name,
             nf_calories: foodInfo.nf_calories,
@@ -142,6 +143,7 @@ class App extends Component {
         responsiveVoice.speak(", , I have an app , I have a" + result + " that is " + data.data.foods[0].nf_calories + "calories", "Hindi Female", {rate: 0.8});
       })
       .catch(res => {
+        console.log(res)
         this.setState({
           food: {
             ...this.state.food,
@@ -173,7 +175,7 @@ class App extends Component {
   };
 
   storeFoodObject(foodObject) {
-    const foodObjects = JSON.parse('items'|| '[]') || []
+    const foodObjects = JSON.parse(localStorage.items || '[]') || []
     const itemToSave = {
       food: foodObject,
       time: Date(),
@@ -203,7 +205,6 @@ class App extends Component {
           }}>
           <source src={sound} type="audio/mpeg" />
         </audio>
-         <NutritionInfo></NutritionInfo> 
         <Webcam
           className="webcam"
           audio={false}

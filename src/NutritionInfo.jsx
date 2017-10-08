@@ -21,7 +21,8 @@ export default class NutritionInfo extends Component {
         nf_total_carbohydrate,
         nf_total_fat
       } = this.props.nutrients
-    
+
+      
     let rendering;
     if (!this.props.error) {
       rendering = <div>
