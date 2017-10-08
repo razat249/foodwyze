@@ -28,10 +28,24 @@ class App extends Component {
         error: ""
       },
       food: {
-        data: {},
+        data: {
+          food_name: "",
+          nf_calories:278.4,
+          nf_cholesterol:0,
+          nf_dietary_fiber:5.52,
+          nf_p:67.2,
+          nf_potassium:1116,
+          nf_protein:1.9,
+          nf_saturated_fat:0.17,
+          nf_sodium:12,
+          nf_sugars:33.6,
+          nf_total_carbohydrate:74.76,
+          nf_total_fat:0.43,
+        },
         fetching: false,
         error: ""
-      }
+      },
+      fetched: false
     };
   }
 
@@ -73,26 +87,38 @@ class App extends Component {
 
         const apiKey = "621280fd2b3f5d4ffcf98dc31920ccecd1b79d7c";
         const url = `https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=${apiKey}&version=2016-05-20`;
-        this.setState({ food: { ...this.state.food, fetching: true } });
+        this.setState({ food: { ...this.state.food, fetching: true }, fetched: false });
         return axios.post(url, data, config);
       })
       .then(res => {
         let result = res.data.images[0].classifiers[0].classes[0].class;
         this.setState({
-          food: { ...this.state.food, data: result, fetching: false }
-        });
-        this.setState({
-          nutrients: { ...this.state.nutrients, fetching: false }
+          food: { ...this.state.food, data: result, fetching: false },
         });
         return this.getNutritionData(result);
       })
       .then(data => {
+        let foodInfo = data.data.foods[0]
         this.setState({
           nutrients: {
             ...this.state.nutrients,
-            data: data.data.foods[0],
+            data: {
+                food_name: foodInfo.food_name,
+                nf_calories: foodInfo.nf_calories,
+                nf_cholesterol: foodInfo.nf_cholesterol,
+                nf_dietary_fiber: foodInfo.nf_dietary_fiber,
+                nf_p: foodInfo.nf_p,
+                nf_potassium: foodInfo.nf_potassium,
+                nf_protein: foodInfo.nf_protein,
+                nf_saturated_fat: foodInfo.nf_saturated_fat,
+                nf_sodium: foodInfo.nf_sodium,
+                nf_sugars: foodInfo.nf_sugars,
+                nf_total_carbohydrate: foodInfo.nf_total_carbohydrate,
+                nf_total_fat: foodInfo.nf_total_fat,
+              },
             fetching: false
-          }
+          },
+          fetched: true
         });
       })
       .catch(res => {
@@ -124,15 +150,16 @@ class App extends Component {
   };
 
   render() {
-    const { result, nutrients, food } = this.state;
+    const { result, nutrients, food, fetched } = this.state;
     const width = window.innerWidth;
     const height = window.innerHeight;
+
     return (
       <section className="app-container">
-         <NutritionInfo></NutritionInfo> 
-        {/* <audio loop autoPlay>
+            {/* <NutritionInfo nutrients={this.state.nutrients.data} ></NutritionInfo>   */}
+         {/* <audio loop autoPlay>
           <source src={sound} type="audio/mpeg" />
-        </audio> */}
+        </audio>  */}
         <Webcam
           className="webcam"
           audio={false}
@@ -144,8 +171,7 @@ class App extends Component {
         {food.fetching || nutrients.fetching?  <img className="captured-image" height={height}
           width={width} src={this.state.imageSrc} alt=""/> : null }
         <button className="btn-capture" onClick={this.capture}> </button>
-
-         {/* {food.fetching || nutrients.fetching? "Loading..." : <h1>{JSON.stringify(nutrients.data)}</h1>}  */}
+           {fetched ? <NutritionInfo nutrients={this.state.nutrients.data}></NutritionInfo> : ""}
       </section>
     );
   }

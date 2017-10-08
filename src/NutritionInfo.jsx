@@ -6,8 +6,22 @@ export default class NutritionInfo extends Component {
   }
 
   render() {
+      const {
+        food_name,
+        nf_calories,
+        nf_cholesterol,
+        nf_dietary_fiber,
+        nf_p,
+        nf_potassium,
+        nf_protein,
+        nf_saturated_fat,
+        nf_sodium,
+        nf_sugars,
+        nf_total_carbohydrate,
+        nf_total_fat
+      } = this.props.nutrients
       return <div className="nutrition-info">
-          <h3>Nutrition Facts</h3>
+          <h3>Nutrition Facts ({food_name}) </h3>
           <hr/>
           <div>Amount Per Serving</div>
           <div>Calories 401</div>
@@ -15,20 +29,20 @@ export default class NutritionInfo extends Component {
           <div>% Daily Value*</div>
           <div>
               <ul>
-                Total Fat 28g -- 43 %
-                    <li>Saturated Fat 12g grams</li>
-                    <li>Polyunsaturated Fat 2g grams</li>
-                    <li>Monounsaturated Fat 11g</li>
+                Total Fat {nf_calories} grams
+                    <li>Saturated Fat {nf_saturated_fat} grams</li>
+                    {/* <li>Polyunsaturated Fat {pol} grams</li>
+                    <li>Monounsaturated Fat 11g</li> */}
               </ul>
           </div>
 
-<div>Cholesterol 69mg milligrams23%</div>
-<div>Sodium 548mg milligrams 23%</div>
-<div>Potassium 113mg milligrams 11%</div>
-<div>Total Carbohydrates 32g grams 2% </div>
-<div>Dietary Fiber 0.5g grams 2%</div>
-<div>Sugars 27g grams</div>
-<div>Protein 6.9gz</div>
+            <div><b> Cholesterol: </b> <span>{nf_cholesterol} milligrams</span></div>
+            <div><b> Sodium: </b> <span>{nf_sodium} milligrams </span></div>
+            <div><b> Potassium: </b> <span>{nf_potassium} milligrams </span></div>
+            <div><b> Total  Carbohydrate:s</b> <span>{nf_total_carbohydrate} grams </span></div>
+            <div><b> Dietary  Fibe:r</b> <span>{nf_dietary_fiber} grams</span></div>
+            <div><b> Sugars: </b> <span>{nf_sugars} grams</span></div>
+            <div><b> Protein: </b> <span>{nf_protein}gz</span></div>
 
       </div>
   }
